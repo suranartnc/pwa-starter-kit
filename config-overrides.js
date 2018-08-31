@@ -7,6 +7,7 @@ module.exports = function override(config, env) {
       'module-resolver',
       {
         alias: {
+          '@routes': './src/routes',
           '@pages': './src/pages'
         }
       }

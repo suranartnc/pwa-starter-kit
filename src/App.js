@@ -1,8 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-
-import Home from '@pages/Home'
-import About from '@pages/About'
+import routes from '@routes'
 
 export default function App() {
   return (
@@ -19,8 +17,9 @@ export default function App() {
 
         <hr />
 
-        <Route exact path="/" component={Home} />
-        <Route path="/about" component={About} />
+        {routes.map(({ path, exact, component }) => (
+          <Route key={path} exact={exact} path={path} component={component} />
+        ))}
       </div>
     </Router>
   )
