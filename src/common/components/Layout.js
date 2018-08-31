@@ -5,9 +5,6 @@ export default function Layout({ children }) {
   return (
     <div>
       <Nav />
-
-      <hr />
-
       {children}
     </div>
   )
