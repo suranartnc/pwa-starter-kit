@@ -8,7 +8,8 @@ module.exports = function override(config, env) {
       {
         alias: {
           '@routes': './src/routes',
-          '@pages': './src/pages'
+          '@pages': './src/pages',
+          '@common': './src/common'
         }
       }
     ],
