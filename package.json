@@ -1,23 +1,21 @@
 {
   "name": "pwa-starter-kit",
   "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "emotion": "^9.2.8",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "react-emotion": "^9.2.8",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.5"
-  },
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "devDependencies": {
+  "dependencies": {
+    "babel-plugin-module-resolver": "^3.1.1",
+    "emotion": "^9.2.8",
+    "react": "^16.4.2",
     "react-app-rewire-emotion": "^4.0.0",
-    "react-app-rewired": "^1.5.2"
+    "react-app-rewired": "^1.5.2",
+    "react-dom": "^16.4.2",
+    "react-emotion": "^9.2.8",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "1.1.5"
   }
 }
