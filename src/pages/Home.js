@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { Button } from 'antd'
 
 import Layout from '@common/components/Layout'
-import withAuth from '@hocs/withAuth'
 
 const HomePageTitle = styled.h1`
   color: #ff0000;
@@ -34,4 +33,4 @@ class HomePage extends Component {
   }
 }
 
-export default withAuth(HomePage)
+export default HomePage
