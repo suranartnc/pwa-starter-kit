@@ -19,6 +19,8 @@ const firebaseConfig = {
   messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID
 }
 
+console.log('REACT_APP_PROJECT_ID', process.env.REACT_APP_PROJECT_ID)
+
 const rrfConfig = {
   userProfile: 'users',
   useFirestoreForProfile: true
