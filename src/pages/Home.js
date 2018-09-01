@@ -1,5 +1,7 @@
 import React from 'react'
-import styled from 'react-emotion'
+import styled from 'styled-components'
+
+import Layout from '@common/components/Layout'
 
 const HomePageTitle = styled.h1`
   color: #ff0000;
@@ -7,8 +9,8 @@ const HomePageTitle = styled.h1`
 
 export default function HomePage() {
   return (
-    <div>
+    <Layout>
       <HomePageTitle>HomePage</HomePageTitle>
-    </div>
+    </Layout>
   )
 }
