@@ -10,13 +10,18 @@
   "dependencies": {
     "antd": "^3.8.4",
     "babel-plugin-module-resolver": "^3.1.1",
+    "firebase": "^5.4.2",
     "react": "^16.4.2",
     "react-app-rewire-import": "^1.0.1",
     "react-app-rewire-styled-components": "^3.0.2",
     "react-app-rewired": "^1.5.2",
     "react-dom": "^16.4.2",
+    "react-redux": "^5.0.7",
+    "react-redux-firebase": "^2.1.8",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5",
+    "redux": "^4.0.0",
+    "redux-firestore": "^0.5.8",
     "styled-components": "^3.4.5"
   },
   "devDependencies": {
