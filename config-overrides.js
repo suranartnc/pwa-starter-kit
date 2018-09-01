@@ -10,7 +10,9 @@ module.exports = function override(config, env) {
         alias: {
           '@routes': './src/routes',
           '@pages': './src/pages',
-          '@common': './src/common'
+          '@common': './src/common',
+          '@hocs': './src/hocs',
+          '@redux': './src/redux'
         }
       }
     ],

@@ -3,10 +3,7 @@ import styled from 'styled-components'
 import { Button } from 'antd'
 
 import Layout from '@common/components/Layout'
-import { compose } from 'redux'
-
-import { connect } from 'react-redux'
-import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
+import withAuth from '@hocs/withAuth'
 
 const HomePageTitle = styled.h1`
   color: #ff0000;
@@ -23,16 +20,6 @@ class HomePage extends Component {
     this.props.firebase.logout()
   }
 
-  componentDidUpdate() {
-    const { auth, history } = this.props
-
-    if (isLoaded(auth)) {
-      if (isEmpty(auth)) {
-        history.push('/')
-      }
-    }
-  }
-
   render() {
     const {
       auth: { displayName }
@@ -47,9 +34,4 @@ class HomePage extends Component {
   }
 }
 
-export default compose(
-  withFirebase,
-  connect(({ firebase: { auth } }) => {
-    return { auth }
-  })
-)(HomePage)
+export default withAuth(HomePage)

@@ -33,10 +33,8 @@ class LoginSection extends Component {
   componentDidUpdate() {
     const { auth, history } = this.props
 
-    if (isLoaded(auth)) {
-      if (!isEmpty(auth)) {
-        history.push('/home')
-      }
+    if (isLoaded(auth) && !isEmpty(auth)) {
+      history.push('/home')
     }
   }
 
@@ -56,9 +54,7 @@ class LoginSection extends Component {
 const EnhancedLoginSection = compose(
   withRouter,
   withFirebase,
-  connect(({ firebase: { auth } }) => {
-    return { auth }
-  })
+  connect(({ firebase: { auth } }) => ({ auth }))
 )(LoginSection)
 
 export default function LoginPage() {
