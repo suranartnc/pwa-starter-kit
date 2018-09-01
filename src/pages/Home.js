@@ -1,16 +1,55 @@
-import React from 'react'
+import React, { Component } from 'react'
 import styled from 'styled-components'
+import { Button } from 'antd'
 
 import Layout from '@common/components/Layout'
+import { compose } from 'redux'
+
+import { connect } from 'react-redux'
+import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
 
 const HomePageTitle = styled.h1`
   color: #ff0000;
 `
 
-export default function HomePage() {
-  return (
-    <Layout>
-      <HomePageTitle>HomePage</HomePageTitle>
-    </Layout>
-  )
+const LogoutButton = styled(Button).attrs({
+  type: 'primary',
+  icon: 'logout',
+  size: 'large'
+})``
+
+class HomePage extends Component {
+  logoutHandler = () => {
+    this.props.firebase.logout()
+  }
+
+  componentDidUpdate() {
+    const { auth, history } = this.props
+
+    if (isLoaded(auth)) {
+      if (isEmpty(auth)) {
+        history.push('/')
+      }
+    }
+  }
+
+  render() {
+    const {
+      auth: { displayName }
+    } = this.props
+
+    return (
+      <Layout>
+        <HomePageTitle>Hi! {displayName}</HomePageTitle>
+        <LogoutButton onClick={this.logoutHandler}>Logout</LogoutButton>
+      </Layout>
+    )
+  }
 }
+
+export default compose(
+  withFirebase,
+  connect(({ firebase: { auth } }) => {
+    return { auth }
+  })
+)(HomePage)

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Row, Col, Button } from 'antd'
 import styled from 'styled-components'
 import { compose } from 'redux'
+import { withRouter } from 'react-router-dom'
 
 import { connect } from 'react-redux'
 import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
@@ -28,9 +29,18 @@ class LoginSection extends Component {
       type: 'popup'
     })
   }
-  render() {
-    const { auth } = this.props
 
+  componentDidUpdate() {
+    const { auth, history } = this.props
+
+    if (isLoaded(auth)) {
+      if (!isEmpty(auth)) {
+        history.push('/home')
+      }
+    }
+  }
+
+  render() {
     return (
       <Row>
         <Col span={12}>
@@ -38,24 +48,13 @@ class LoginSection extends Component {
             Login with Facebook
           </FacebookButton>
         </Col>
-        <Col span={12}>
-          <div>
-            <h2>Auth</h2>
-            {!isLoaded(auth) ? (
-              <span>Loading...</span>
-            ) : isEmpty(auth) ? (
-              <span>Not Authed</span>
-            ) : (
-              <pre>{JSON.stringify(auth, null, 2)}</pre>
-            )}
-          </div>
-        </Col>
       </Row>
     )
   }
 }
 
 const EnhancedLoginSection = compose(
+  withRouter,
   withFirebase,
   connect(({ firebase: { auth } }) => {
     return { auth }
