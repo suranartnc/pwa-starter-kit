@@ -21,7 +21,7 @@ export default class Nav extends React.Component {
         mode="horizontal"
       >
         <Menu.Item key="home">
-          <Link to="/">Home</Link>
+          <Link to="/home">Home</Link>
         </Menu.Item>
         <Menu.Item key="about">
           <Link to="/about">About</Link>

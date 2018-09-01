@@ -1,5 +1,5 @@
-const { compose, injectBabelPlugin } = require('react-app-rewired')
-const { createEmotionRewire } = require('react-app-rewire-emotion')
+const { injectBabelPlugin } = require('react-app-rewired')
+const rewireStyledComponents = require('react-app-rewire-styled-components')
 const rewireImport = require('react-app-rewire-import')
 
 module.exports = function override(config, env) {
@@ -10,7 +10,9 @@ module.exports = function override(config, env) {
         alias: {
           '@routes': './src/routes',
           '@pages': './src/pages',
-          '@common': './src/common'
+          '@common': './src/common',
+          '@hocs': './src/hocs',
+          '@redux': './src/redux'
         }
       }
     ],
@@ -22,7 +24,7 @@ module.exports = function override(config, env) {
     style: 'css'
   })
 
-  const rewires = compose(createEmotionRewire({ inline: true }))
+  config = rewireStyledComponents(config, env)
 
-  return rewires(config, env)
+  return config
 }
