@@ -23,6 +23,7 @@ const firebaseConfig = {
 const rrfConfig = {
   userProfile: 'users',
   useFirestoreForProfile: true
+  // useFirestoreForStorageMeta: true
 }
 
 firebase.initializeApp(firebaseConfig)
