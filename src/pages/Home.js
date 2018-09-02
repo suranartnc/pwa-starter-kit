@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { Button } from 'antd'
 
 import Layout from '@common/components/Layout'
+import Uploader from '@common/components/Uploader'
 
 const HomePageTitle = styled.h1`
   color: #ff0000;
@@ -28,6 +29,7 @@ class HomePage extends Component {
       <Layout>
         <HomePageTitle>Hi! {displayName}</HomePageTitle>
         <LogoutButton onClick={this.logoutHandler}>Logout</LogoutButton>
+        <Uploader />
       </Layout>
     )
   }
