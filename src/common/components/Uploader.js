@@ -16,21 +16,21 @@ class Uploader extends Component {
     uploadedFiles: PropTypes.object
   }
 
-  onFilesDrop = files => {
-    return this.props.firebase.uploadFiles(filesPath, files).then(data => {
-      return data.map(({ uploadTaskSnapshot: { metadata } }) => {
-        const cleanedMetadata = omit(metadata, [
-          'cacheControl',
-          'contentLanguage',
-          'contentDisposition',
-          'contentEncoding',
-          'customMetadata',
-          'metageneration',
-          'generation'
-        ])
+  onFilesDrop = async files => {
+    const uploadedData = await this.props.firebase.uploadFiles(filesPath, files)
 
-        return this.props.firestore.add(filesPath, cleanedMetadata)
-      })
+    uploadedData.forEach(({ uploadTaskSnapshot: { metadata } }) => {
+      const cleanedMetadata = omit(metadata, [
+        'cacheControl',
+        'contentLanguage',
+        'contentDisposition',
+        'contentEncoding',
+        'customMetadata',
+        'metageneration',
+        'generation'
+      ])
+
+      this.props.firestore.add(filesPath, cleanedMetadata)
     })
   }
 
