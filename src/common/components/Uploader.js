@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { map } from 'lodash'
-import { firebaseConnect } from 'react-redux-firebase'
+import { map, omit } from 'lodash'
+import { firestoreConnect } from 'react-redux-firebase'
+
 import Dropzone from 'react-dropzone'
 
 const filesPath = 'uploadedFiles'
@@ -11,15 +12,30 @@ const filesPath = 'uploadedFiles'
 class Uploader extends Component {
   static propTypes = {
     firebase: PropTypes.object.isRequired,
+    firestore: PropTypes.object.isRequired,
     uploadedFiles: PropTypes.object
   }
 
   onFilesDrop = files => {
-    return this.props.firebase.uploadFiles(filesPath, files, filesPath)
+    return this.props.firebase.uploadFiles(filesPath, files).then(data => {
+      return data.map(({ uploadTaskSnapshot: { metadata } }) => {
+        const cleanedMetadata = omit(metadata, [
+          'cacheControl',
+          'contentLanguage',
+          'contentDisposition',
+          'contentEncoding',
+          'customMetadata',
+          'metageneration',
+          'generation'
+        ])
+
+        return this.props.firestore.add(filesPath, cleanedMetadata)
+      })
+    })
   }
 
   onFileDelete = (file, key) => () => {
-    return this.props.firebase.deleteFile(file.fullPath, `${filesPath}/${key}`)
+    return this.props.firebase.deleteFile(file.fullPath)
   }
 
   render() {
@@ -49,9 +65,8 @@ class Uploader extends Component {
 }
 
 export default compose(
-  firebaseConnect([{ path: filesPath }]),
-  connect(({ firebase: { data } }) => {
-    console.log('data', data)
+  firestoreConnect([filesPath]),
+  connect(({ firestore: { data } }) => {
     return {
       uploadedFiles: data[filesPath]
     }
