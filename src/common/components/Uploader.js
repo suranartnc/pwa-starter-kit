@@ -2,40 +2,54 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { map, omit } from 'lodash'
+import { omit, isEmpty } from 'lodash'
 import { firestoreConnect } from 'react-redux-firebase'
 
 import Dropzone from 'react-dropzone'
 
 const filesPath = 'uploadedFiles'
 
+function getStorageDownloadURL({ bucket, fullPath }) {
+  const encodedFullPath = encodeURIComponent(fullPath)
+  return `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodedFullPath}?alt=media`
+}
+
+function cleanUpMetaData(metadata) {
+  const keysToOmit = [
+    'cacheControl',
+    'contentLanguage',
+    'contentDisposition',
+    'contentEncoding',
+    'customMetadata',
+    'metageneration',
+    'generation'
+  ]
+
+  return omit(metadata, keysToOmit)
+}
+
 class Uploader extends Component {
   static propTypes = {
     firebase: PropTypes.object.isRequired,
     firestore: PropTypes.object.isRequired,
-    uploadedFiles: PropTypes.object
+    uploadedFiles: PropTypes.array
   }
 
   onFilesDrop = async files => {
     const uploadedData = await this.props.firebase.uploadFiles(filesPath, files)
 
     uploadedData.forEach(({ uploadTaskSnapshot: { metadata } }) => {
-      const cleanedMetadata = omit(metadata, [
-        'cacheControl',
-        'contentLanguage',
-        'contentDisposition',
-        'contentEncoding',
-        'customMetadata',
-        'metageneration',
-        'generation'
-      ])
-
-      this.props.firestore.add(filesPath, cleanedMetadata)
+      const cleanedMetadata = cleanUpMetaData(metadata)
+      this.props.firestore.collection(filesPath).add(cleanedMetadata)
     })
   }
 
-  onFileDelete = (file, key) => () => {
-    return this.props.firebase.deleteFile(file.fullPath)
+  onFileDelete = file => async () => {
+    this.props.firebase.deleteFile(file.fullPath)
+    this.props.firestore
+      .collection(filesPath)
+      .doc(file.id)
+      .delete()
   }
 
   render() {
@@ -46,17 +60,22 @@ class Uploader extends Component {
         <Dropzone onDrop={this.onFilesDrop}>
           <div>Drag and drop files here or click to select</div>
         </Dropzone>
-        {uploadedFiles && (
+        {!isEmpty(uploadedFiles) && (
           <div>
             <h3>Uploaded file(s):</h3>
-            {map(uploadedFiles, (file, key) => (
-              <div key={file.name + key}>
-                <span>{file.name}</span>
-                <button onClick={this.onFileDelete(file, key)}>
-                  Delete File
-                </button>
-              </div>
-            ))}
+
+            {uploadedFiles.filter(file => file !== null).map(file => {
+              const { id, name } = file
+
+              return (
+                <div key={name + id}>
+                  <a href={getStorageDownloadURL(file)} target="_blank">
+                    {name}
+                  </a>
+                  <button onClick={this.onFileDelete(file)}>Delete File</button>
+                </div>
+              )
+            })}
           </div>
         )}
       </div>
@@ -66,9 +85,9 @@ class Uploader extends Component {
 
 export default compose(
   firestoreConnect([filesPath]),
-  connect(({ firestore: { data } }) => {
+  connect(({ firestore: { ordered } }) => {
     return {
-      uploadedFiles: data[filesPath]
+      uploadedFiles: ordered[filesPath]
     }
   })
 )(Uploader)
