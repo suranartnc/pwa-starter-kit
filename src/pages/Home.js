@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Button } from 'antd'
+import { Button, Icon } from 'antd'
 
 import Layout from '@common/components/Layout'
 import UploadProvider from '@common/components/UploadProvider'
@@ -15,6 +15,13 @@ const LogoutButton = styled(Button).attrs({
   icon: 'logout',
   size: 'large'
 })``
+
+const Container = styled.div`
+  display: flex;
+  height: calc(100vh - 48px);
+  justify-content: center;
+  align-items: center;
+`
 
 class HomePage extends Component {
   static propTypes = {
@@ -35,47 +42,70 @@ class HomePage extends Component {
 
     return (
       <Layout>
-        <HomePageTitle>Hi! {displayName}</HomePageTitle>
-        <LogoutButton onClick={this.logoutHandler}>Logout</LogoutButton>
+        {/* <HomePageTitle>Hi! {displayName}</HomePageTitle> */}
+        {/* <LogoutButton onClick={this.logoutHandler}>Logout</LogoutButton> */}
 
-        <UploadProvider filesPath="uploadedFiles">
-          {({
-            Dropzone,
-            uploadedFiles,
-            getDownloadURL,
-            onFilesDrop,
-            onFileDelete
-          }) => {
-            return (
-              <div>
-                <Dropzone accept="image/jpeg, image/png" onDrop={onFilesDrop}>
-                  <div>Drag and drop files here or click to select</div>
-                </Dropzone>
+        <Container>
+          <UploadProvider filesPath="uploadedFiles">
+            {({
+              Dropzone,
+              uploadedFiles,
+              getDownloadURL,
+              onFilesDrop,
+              onFileDelete
+            }) => {
+              return (
+                <div>
+                  <Dropzone
+                    style={{ border: '2px dashed #08c', borderRadius: '5px' }}
+                    accept="image/jpeg, image/png"
+                    onDrop={onFilesDrop}
+                  >
+                    <div
+                      style={{
+                        padding: '15px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        flexDirection: 'column'
+                      }}
+                    >
+                      <Icon
+                        type="cloud-upload"
+                        theme="outlined"
+                        style={{
+                          fontSize: '64px',
+                          color: '#08c'
+                        }}
+                      />
+                      <span>Upload an image</span>
+                    </div>
+                  </Dropzone>
 
-                {uploadedFiles.length > 0 && (
-                  <div>
-                    <h3>Uploaded file(s):</h3>
+                  {uploadedFiles.length > 0 && (
+                    <div>
+                      <h3>Uploaded file(s):</h3>
 
-                    {uploadedFiles.map(file => {
-                      const { id, name } = file
+                      {uploadedFiles.map(file => {
+                        const { id, name } = file
 
-                      return (
-                        <div key={name + id}>
-                          <a href={getDownloadURL(file)} target="_blank">
-                            {name}
-                          </a>
-                          <button onClick={onFileDelete(file)}>
-                            Delete File
-                          </button>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-            )
-          }}
-        </UploadProvider>
+                        return (
+                          <div key={name + id}>
+                            <a href={getDownloadURL(file)} target="_blank">
+                              {name}
+                            </a>
+                            <button onClick={onFileDelete(file)}>
+                              Delete File
+                            </button>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              )
+            }}
+          </UploadProvider>
+        </Container>
       </Layout>
     )
   }
