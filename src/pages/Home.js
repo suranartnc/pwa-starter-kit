@@ -1,20 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Button, Icon } from 'antd'
+import { Icon } from 'antd'
 
 import Layout from '@common/components/Layout'
 import UploadProvider from '@common/components/UploadProvider'
-
-const HomePageTitle = styled.h1`
-  color: #ff0000;
-`
-
-const LogoutButton = styled(Button).attrs({
-  type: 'primary',
-  icon: 'logout',
-  size: 'large'
-})``
 
 const Container = styled.div`
   display: flex;
@@ -25,28 +15,16 @@ const Container = styled.div`
 
 class HomePage extends Component {
   static propTypes = {
-    firebase: PropTypes.object.isRequired,
-    auth: PropTypes.shape({
-      displayName: PropTypes.string.isRequired
-    }).isRequired
-  }
-
-  logoutHandler = () => {
-    this.props.firebase.logout()
+    firebase: PropTypes.object.isRequired
   }
 
   render() {
-    const {
-      auth: { displayName }
-    } = this.props
+    const filesPath = 'uploadedFiles'
 
     return (
       <Layout>
-        {/* <HomePageTitle>Hi! {displayName}</HomePageTitle> */}
-        {/* <LogoutButton onClick={this.logoutHandler}>Logout</LogoutButton> */}
-
         <Container>
-          <UploadProvider filesPath="uploadedFiles">
+          <UploadProvider filesPath={filesPath}>
             {({
               Dropzone,
               uploadedFiles,
@@ -66,7 +44,8 @@ class HomePage extends Component {
                         padding: '15px',
                         display: 'flex',
                         justifyContent: 'center',
-                        flexDirection: 'column'
+                        flexDirection: 'column',
+                        alignItems: 'center'
                       }}
                     >
                       <Icon
@@ -83,8 +62,6 @@ class HomePage extends Component {
 
                   {uploadedFiles.length > 0 && (
                     <div>
-                      <h3>Uploaded file(s):</h3>
-
                       {uploadedFiles.map(file => {
                         const { id, name } = file
 
@@ -93,9 +70,7 @@ class HomePage extends Component {
                             <a href={getDownloadURL(file)} target="_blank">
                               {name}
                             </a>
-                            <button onClick={onFileDelete(file)}>
-                              Delete File
-                            </button>
+                            <button onClick={onFileDelete(file)}>Delete</button>
                           </div>
                         )
                       })}
