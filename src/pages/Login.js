@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Row, Col, Button } from 'antd'
 import styled from 'styled-components'
 import { compose } from 'redux'
@@ -23,6 +24,14 @@ const Container = styled.div`
 `
 
 class LoginSection extends Component {
+  static propTypes = {
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired
+    }).isRequired,
+    firebase: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired
+  }
+
   loginHandler = () => {
     this.props.firebase.login({
       provider: 'facebook',
