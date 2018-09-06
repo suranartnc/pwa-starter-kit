@@ -48,6 +48,10 @@ class ChatPage extends Component {
   onMessageSubmit = e => {
     e.preventDefault()
 
+    if (this.state.messageInput.replace(/^\s+|\s+$/gm, '') === '') {
+      return
+    }
+
     this.props.dispatch({
       type: 'CHAT_MESSAGE_PUSH',
       payload: {
