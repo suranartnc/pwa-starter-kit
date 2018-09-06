@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Input } from 'antd'
+import { compose } from 'redux'
+import { connect } from 'react-redux'
 
 import Layout from '@common/components/Layout'
 
@@ -28,15 +31,61 @@ const InputContainer = styled.div`
 `
 
 class ChatPage extends Component {
+  static propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    chatMessages: PropTypes.arrayOf(
+      PropTypes.shape({
+        type: PropTypes.string.isRequired,
+        message: PropTypes.string.isRequired
+      })
+    )
+  }
+
+  state = {
+    messageInput: ''
+  }
+
+  onMessageSubmit = e => {
+    e.preventDefault()
+
+    this.props.dispatch({
+      type: 'CHAT_MESSAGE_PUSH',
+      payload: {
+        type: 'me',
+        message: this.state.messageInput
+      }
+    })
+
+    this.setState({
+      messageInput: ''
+    })
+  }
+
+  onInputChanged = e => {
+    this.setState({
+      messageInput: e.target.value
+    })
+  }
+
   render() {
     return (
       <Layout>
         <Container>
-          <Bubble>Hello!</Bubble>
-          <Bubble>Welcome to Dialogflow</Bubble>
-          <Bubble type="me">Hi!</Bubble>
+          {this.props.chatMessages.map(function({ type, message }, index) {
+            return (
+              <Bubble key={index} type={type}>
+                {message}
+              </Bubble>
+            )
+          })}
           <InputContainer>
-            <Input placeholder="Message..." />
+            <form onSubmit={this.onMessageSubmit}>
+              <Input
+                placeholder="Message..."
+                onChange={this.onInputChanged}
+                value={this.state.messageInput}
+              />
+            </form>
           </InputContainer>
         </Container>
       </Layout>
@@ -44,4 +93,8 @@ class ChatPage extends Component {
   }
 }
 
-export default ChatPage
+export default compose(
+  connect(function({ chatMessages }) {
+    return { chatMessages }
+  })
+)(ChatPage)
