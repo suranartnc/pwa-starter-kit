@@ -12,7 +12,8 @@ module.exports = function override(config, env) {
           '@pages': './src/pages',
           '@common': './src/common',
           '@hocs': './src/hocs',
-          '@redux': './src/redux'
+          '@redux': './src/redux',
+          '@utils': './src/utils'
         }
       }
     ],
