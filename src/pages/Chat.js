@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Input } from 'antd'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
+import axios from 'axios'
 
 import Layout from '@common/components/Layout'
 
@@ -45,7 +46,7 @@ class ChatPage extends Component {
     messageInput: ''
   }
 
-  onMessageSubmit = e => {
+  onMessageSubmit = async e => {
     e.preventDefault()
 
     if (this.state.messageInput.replace(/^\s+|\s+$/gm, '') === '') {
@@ -63,6 +64,25 @@ class ChatPage extends Component {
     this.setState({
       messageInput: ''
     })
+
+    try {
+      const response = await axios.post(
+        'https://us-central1-pwa-starter-kit-b97bc.cloudfunctions.net/query',
+        {
+          message: this.state.messageInput
+        }
+      )
+
+      this.props.dispatch({
+        type: 'CHAT_MESSAGE_PUSH',
+        payload: {
+          type: 'bot',
+          message: response.data
+        }
+      })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   onInputChanged = e => {
